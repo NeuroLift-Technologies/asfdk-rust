@@ -1,12 +1,6 @@
 # Build artifacts
-*.o
-*.a
-*.so
-*.dylib
-*.dll
-lib/
-build/
-cmake-build-*/
+/target
+Cargo.lock
 
 # IDE
 .vscode/

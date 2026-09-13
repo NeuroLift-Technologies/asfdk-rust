@@ -1,4 +1,4 @@
-# CLAUDE.md — Cplus
+# CLAUDE.md — Rust
 
 ## You Are Here
 
@@ -84,7 +84,7 @@ These are **non-negotiable**. No exceptions without explicit Joshua approval:
 
 ## Internal File Map
 
-All files below live in this repository (`NeuroLift-Technologies/Cplus`):
+All files below live in this repository (`NeuroLift-Technologies/asfdk-rust`):
 
 ```
 AGENTS.md                               ← Agent registry (this file)

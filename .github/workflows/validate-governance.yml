@@ -1,6 +1,7 @@
-name: ASFDK C++ Governance Validation
+name: ASFDK Rust Governance Validation
 on:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/validate-governance.yml'
       - '.nltotoi/**'
@@ -11,6 +12,8 @@ on:
       - 'SOPs/**'
       - 'ISSUE_TEMPLATE/**'
       - 'PULL_REQUEST_TEMPLATE/**'
+      - 'src/**'
+      - 'Cargo.toml'
   pull_request:
     paths:
       - '.github/workflows/validate-governance.yml'
@@ -22,6 +25,14 @@ on:
       - 'SOPs/**'
       - 'ISSUE_TEMPLATE/**'
       - 'PULL_REQUEST_TEMPLATE/**'
+      - 'src/**'
+      - 'Cargo.toml'
+
+# Least privilege: this workflow only checks out code and runs the governance
+# script / cargo gates. It never writes to the repository, so GITHUB_TOKEN is
+# read-only for contents (CodeQL actions/missing-workflow-permissions).
+permissions:
+  contents: read
 
 jobs:
   validate:
@@ -29,6 +40,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@6bed0761d98439e5a578e2877258200ad565ba87
+        with:
+          components: rustfmt, clippy
       - name: Check governance status
-        run: |
-          bash .nltotoi/scripts/validate-governance.sh
+        run: bash .nltotoi/scripts/validate-governance.sh
+      - name: Format check
+        run: cargo fmt --check
+      - name: Build
+        run: cargo build
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Test
+        run: cargo test
