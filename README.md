@@ -86,7 +86,7 @@ fn main() {
 │   ├── rrt.rs            # Crisis scoring, levels (green→black), interventions, response scripts
 │   ├── types.rs          # Enums & constants (modes, channels, crisis levels) with canonical JSON names
 │   ├── dto.rs            # Config, interaction, health, and assessment DTOs
-│   └── tests.rs          # 29 unit tests (mirrors Go foundation_test.go)
+│   └── tests.rs          # 31 unit tests (mirrors Go foundation_test.go)
 ```
 
 ## Development
@@ -95,7 +95,7 @@ fn main() {
 cargo build
 cargo test
 cargo fmt --check
-bash .nltotoi/scripts/validate-governance.sh   # 38 governance checks
+bash .nltotoi/scripts/validate-governance.sh   # 42 checks with cargo on PATH (38 structure/doc + 4 toolchain gates); 38/38 without
 ```
 
 CI runs governance validation (plus build/test/fmt gates) on every pull request (`.github/workflows/validate-governance.yml`).

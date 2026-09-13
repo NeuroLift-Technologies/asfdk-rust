@@ -40,7 +40,7 @@
       "cargo test (31 tests)",
       "cargo clippy --all-targets -- -D warnings",
       "cargo fmt --check",
-      "bash .nltotoi/scripts/validate-governance.sh (42 checks)"
+      "bash .nltotoi/scripts/validate-governance.sh (42 checks with cargo on PATH; 38/38 structure/doc checks when cargo is off PATH)"
     ],
     "tests_passing": true
   }
