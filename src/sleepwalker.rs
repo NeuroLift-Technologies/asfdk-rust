@@ -128,13 +128,7 @@ pub fn analyze_emotional_state(text: &str) -> EmotionalState {
     } else {
         "positive"
     };
-    let mut confidence = score * dilution_factor(text);
-    if confidence > 1.0 {
-        confidence = 1.0;
-    }
-    if confidence < 0.0 {
-        confidence = 0.0;
-    }
+    let confidence = (score * dilution_factor(text)).clamp(0.0, 1.0);
     EmotionalState {
         state: state.to_string(),
         confidence,

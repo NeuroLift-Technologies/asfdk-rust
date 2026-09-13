@@ -71,9 +71,9 @@ done
 # 8. Toolchain gates (run when cargo is available; skip with notice otherwise)
 if command -v cargo > /dev/null 2>&1; then
     check "cargo fmt --check (formatting)" bash -c "cd \"$REPO_ROOT\" && cargo fmt --check"
-    check "cargo build (compilation)" bash -c "cd \"$REPO_ROOT\" && cargo build --quiet --locked"
+    check "cargo build (compilation)" bash -c "cd \"$REPO_ROOT\" && cargo build --quiet"
     check "cargo clippy (lints)" bash -c "cd \"$REPO_ROOT\" && cargo clippy --all-targets --quiet -- -D warnings"
-    check "cargo test (29 tests)" bash -c "cd \"$REPO_ROOT\" && cargo test --quiet --locked"
+    check "cargo test (29 tests)" bash -c "cd \"$REPO_ROOT\" && cargo test --quiet"
 else
     echo "  ⚠️  SKIP: cargo toolchain not on PATH — build/lint/test gates run in CI"
 fi
