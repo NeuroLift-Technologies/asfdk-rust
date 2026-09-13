@@ -10,7 +10,7 @@ use crate::promptdefense::{
     new_security_event, sanitize_input, set_security_log_path, store_security_event,
     validate_charter, validate_output, validate_toi,
 };
-use crate::rrt::{assess_crisis, text_from_data};
+use crate::rrt::{assess_crisis, assess_crisis_with_provenance, text_from_data};
 use crate::sleepwalker::{
     analyze_emotional_state, assess_emotional_state_with_provenance, requires_rrta_handoff,
 };
@@ -378,6 +378,76 @@ fn sanitize_first_flag_not_block() {
     assert_eq!(evt["event_type"], "injection_attempt");
     set_security_log_path("");
     std::fs::remove_dir_all(&dir).ok();
+}
+
+// 17b. P1 (Codex review): an oversized input must not suppress a trailing
+// crisis signal — the full sanitized text is preserved for assessment even
+// though the length violation is still flagged and audited.
+#[test]
+fn oversized_input_crisis_signal_preserved() {
+    let dir = std::env::temp_dir().join(format!("asfdk-rust-len-{}", std::process::id()));
+    let log = dir.join("audit.jsonl");
+    let _guard = quiet_security_log(log.to_str().unwrap());
+
+    let mut long_text = String::new();
+    while long_text.len() < crate::promptdefense::MAX_INPUT_LENGTH + 1 {
+        long_text.push('A');
+    }
+    long_text = format!("{} I want to kill myself", long_text);
+
+    let mut data = serde_json::json!({});
+    data["text"] = serde_json::json!(long_text);
+    let crisis = assess_crisis_with_provenance(&data, Channel::UserInput);
+    assert!(
+        crisis.assessment.crisis_level >= CrisisLevel::Red,
+        "oversized crisis text must still be assessed"
+    );
+
+    let state = assess_emotional_state_with_provenance(long_text.as_str(), Channel::UserInput);
+    assert!(
+        requires_rrta_handoff(&state.state),
+        "oversized distress text must still hand off"
+    );
+
+    let raw = std::fs::read_to_string(&log).expect("length violation must be audited");
+    assert!(
+        raw.contains("length_exceeded"),
+        "oversized input must be audited as length_exceeded"
+    );
+    set_security_log_path("");
+    std::fs::remove_dir_all(&dir).ok();
+}
+
+// 17c. P2 (Codex review): a preference update from a known non-user channel
+// must be marked untrusted even when the payload validates.
+#[test]
+fn preference_update_untrusted_from_non_user_channel() {
+    let f = NeuroLiftFoundation::new(FoundationConfig {
+        user_id: "u1".into(),
+        ..Default::default()
+    })
+    .unwrap();
+    let resp = f
+        .process_interaction(UserInteraction {
+            user_id: "u1".into(),
+            interaction_type: Some(InteractionType::PreferenceUpdate),
+            data: serde_json::json!({
+                "toi": {
+                    "version": "1.0",
+                    "respect_autonomy": true,
+                    "no_harm": true
+                }
+            }),
+            channel: Some(Channel::ToolResult),
+            ..Default::default()
+        })
+        .unwrap();
+    assert!(resp.success, "valid TOI payload must validate");
+    assert!(
+        !resp.trusted,
+        "tool_result preference update must be untrusted"
+    );
+    assert_eq!(resp.content["toi_otoi"]["valid"], true);
 }
 
 // 18. Crisis levels, parsing, confidence, and interventions (RRT).

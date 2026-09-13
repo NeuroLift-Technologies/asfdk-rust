@@ -199,6 +199,10 @@ impl NeuroLiftFoundation {
                 response.success = false;
                 response.content["error"] = json!("TOI validation failed");
             }
+            // Trust policy: only user_input provenance is trusted. A
+            // tool/model-supplied TOI payload must not be reported as
+            // user-originated data even when it validates (Codex P2).
+            response.trusted = response.trusted && channel == Channel::UserInput;
         }
         if self.is_component_active(COMPONENT_SLEEPWALKER)
             && interaction.interaction_type == Some(InteractionType::EmotionalAssessment)

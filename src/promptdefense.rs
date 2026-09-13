@@ -440,7 +440,7 @@ pub fn new_security_event(
 /// crisis signal is never silently suppressed by an injection heuristic) but
 /// the flag and a security event are recorded.
 pub fn sanitize_for_assessment(text: &str) -> SanitizationResult {
-    let res = sanitize_input(text, MAX_INPUT_LENGTH);
+    let mut res = sanitize_input(text, MAX_INPUT_LENGTH);
     if res.clean {
         return res;
     }
@@ -453,5 +453,17 @@ pub fn sanitize_for_assessment(text: &str) -> SanitizationResult {
         &security_log_path(),
         &new_security_event(event_type, "unknown", res.reason.as_deref().unwrap_or("")),
     );
+    // Length is the only rejection that empties the content (sanitize_input
+    // returns no content when input exceeds MAX_INPUT_LENGTH). Preserve the
+    // full sanitized text for assessment: the analyzers only lexically scan
+    // for indicators, and an oversized message that ends in a crisis signal
+    // (e.g. "…kill myself") must be assessed, not reduced to an empty
+    // neutral/green text — flag-not-block must not suppress a genuine signal
+    // (Codex P1).
+    if res.content.is_empty() && res.risk_level == RiskLevel::Medium && !text.is_empty() {
+        let mut content = strip_zero_width(text);
+        content = strip_controls(&content);
+        res.content = content;
+    }
     res
 }

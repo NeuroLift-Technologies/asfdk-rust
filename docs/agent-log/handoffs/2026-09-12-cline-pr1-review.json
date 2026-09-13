@@ -1,0 +1,47 @@
+{
+  "handoff_record": {
+    "session_id": "session-asfdk-rust-002",
+    "agent_name": "rust_governance_agent (Cline)",
+    "date": "2026-09-12",
+    "repo": "NeuroLift-Technologies/asfdk-rust",
+    "branch": "feature/port-asfdk-rust",
+    "work_completed": [
+      "PR #1 CI validate check fixed: cargo clippy -D warnings flagged manual_clamp (sleepwalker.rs) — replaced with f64.clamp(0.0, 1.0); cargo build --locked failed on fresh checkout (Cargo.lock gitignored) — removed --locked from build/test gates in validate-governance.sh and from standalone workflow steps",
+      "CodeQL actions/missing-workflow-permissions: added workflow-level least-privilege permissions (contents: read); pinned dtolnay/rust-toolchain to commit SHA (actions/unpinned-action)",
+      "Codex review addressed (5 inline findings): P1 oversized-input crisis suppression (sanitize_for_assessment now preserves full sanitized text for assessment when length-flagged, audit event retained); P2 preference-update trust (non-user channel marks response untrusted); README examples compile-fixed (Option reason unwrap + {:?} RiskLevel Debug; &Value by reference)",
+      "Two regression tests added: oversized_input_crisis_signal_preserved, preference_update_untrusted_from_non_user_channel (29 -> 31 tests)"
+    ],
+    "work_in_progress": [
+      "PR re-review (all findings addressed in review-fix commits)"
+    ],
+    "blockers": [],
+    "decisions_made": [
+      "Length-overflow preserves full text for assessment analyzers (they only lexically scan); the model-facing sanitize_input still rejects with a length_exceeded event",
+      "Preference updates follow the user_input-only trust policy like other routes",
+      "CodeRabbit review skipped (117 files > 100 limit) — left unresolved per user direction"
+    ],
+    "decisions_pending": [
+      "Merge decision for PR #1 (4 commits: 8f69ee9 port, ba2c46c CI gates, bd243eb permissions, review fixes)"
+    ],
+    "escalations": [],
+    "next_agent_notes": "All CI checks green on latest head; code-scanning alert #1 (missing-workflow-permissions) auto-closes on merge to main. CodeRabbit comment can be ignored (user-directed) or addressed by splitting the PR if Joshua wants a bot review.",
+    "files_modified": [
+      "src/promptdefense.rs (sanitize_for_assessment preserves content on length flag)",
+      "src/foundation.rs (preference-update trust: non-user channel -> untrusted)",
+      "src/sleepwalker.rs (manual_clamp -> f64.clamp)",
+      "src/tests.rs (+2 regression tests)",
+      ".nltotoi/scripts/validate-governance.sh (drop --locked)",
+      ".github/workflows/validate-governance.yml (permissions, pinned action, drop --locked)",
+      "README.md (compilable usage examples)",
+      "docs/agent-log/handoffs/2026-09-12-cline-pr1-review.json (this record)"
+    ],
+    "tests_run": [
+      "cargo build",
+      "cargo test (31 tests)",
+      "cargo clippy --all-targets -- -D warnings",
+      "cargo fmt --check",
+      "bash .nltotoi/scripts/validate-governance.sh (42 checks)"
+    ],
+    "tests_passing": true
+  }
+}
