@@ -28,6 +28,12 @@ on:
       - 'src/**'
       - 'Cargo.toml'
 
+# Least privilege: this workflow only checks out code and runs the governance
+# script / cargo gates. It never writes to the repository, so GITHUB_TOKEN is
+# read-only for contents (CodeQL actions/missing-workflow-permissions).
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -43,8 +49,8 @@ jobs:
       - name: Format check
         run: cargo fmt --check
       - name: Build
-        run: cargo build --locked
+        run: cargo build
       - name: Clippy
         run: cargo clippy --all-targets -- -D warnings
       - name: Test
-        run: cargo test --locked
+        run: cargo test
