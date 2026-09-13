@@ -1,0 +1,54 @@
+{
+  "handoff_record": {
+    "session_id": "session-asfdk-rust-001",
+    "agent_name": "rust_governance_agent (Cline)",
+    "date": "2026-09-12",
+    "repo": "NeuroLift-Technologies/asfdk-rust",
+    "branch": "feature/port-asfdk-rust",
+    "work_completed": [
+      "Clean-room Rust port of ASFDK core (crate asfdk 0.1.0, edition 2021, serde/serde_json only)",
+      "types.rs: FoundationMode, InteractionType, Channel, RiskLevel, SecurityEventType, OutputSchemaType with canonical JSON names; CrisisLevel with as_str/Display/FromStr",
+      "dto.rs: FoundationConfig/FoundationComponents (override semantics), UserInteraction, InteractionOutcome, health/validation/assessment DTOs with provenance wrappers",
+      "promptdefense.rs: strict TOI/OTOI validation (types, boolean principles, known versions), sanitize-first prompt defense, injection/structural findings, newline-delimited audit log",
+      "sleepwalker.rs: 8-indicator emotional lexicon with confidence dilution (<5 word-chars x0.6, <15 x0.85), provenance (user_input-only trust), requires_rrta_handoff",
+      "rrt.rs: additive-weight crisis scoring mirroring the reviewed Go port (one weight per indicator, thresholds 0.1/0.2/0.3/0.4, single ideation match reaches black), intervention scripts, safe response generator",
+      "foundation.rs: NeuroLiftFoundation with strict TOI validation at construction, sanitize-first flag-not-block pipeline, canonical routing (response_type mirrors interaction type, emotional handoff to RRT, preference validation, explicit no-route failure), TOI-aware health check",
+      "tests.rs: 29 tests mirroring the Go suite (which embeds all PR-review fixes from asfdk-go)",
+      "Removed misplaced C++ port content (packages/, CMakeLists.txt, vcpkg.json, C++ docs) — preserved on branch archive/cpp-initial-import and in NeuroLift-Technologies/asfdk-cplus",
+      "Rewrote governance identity files for Rust (nltotoi.json, .nltotoi/*, AGENTS.md, CLAUDE.md, CI workflow with cargo gates, .gitignore)",
+      "Governance script extended: structure checks + cargo fmt/build/clippy/test gates that skip with notice when the toolchain is absent"
+    ],
+    "work_in_progress": [
+      "PR creation on GitHub (branch feature/port-asfdk-rust)"
+    ],
+    "blockers": [],
+    "decisions_made": [
+      "Initial C++ content archived to archive/cpp-initial-import branch instead of deletion — nothing lost, no force-push",
+      "asfdk-go (review-verified) is the behavioral fidelity target; canonical NeuroLift-Technologies/asfdk consulted for routing/semantics",
+      "serde/serde_json are the only dependencies (dev-deps for tests included); no runtime deps beyond serde",
+      "All Go-port review fixes carried over from day one: strict validation, user_input-only trust, sanitize-first flag-not-block, fail-closed unknown channels, explicit no-route failure, TOI-aware health check"
+    ],
+    "decisions_pending": [
+      "Wire PR through review with the same rigor as asfdk-go PR #1",
+      "Full TOI schema depth and OTOI mesh advanced policies (post-merge phase)"
+    ],
+    "escalations": [],
+    "next_agent_notes": "Branch ready for PR. Gates: cargo fmt --check clean, clippy -D warnings clean, cargo build --locked OK, cargo test --locked 29/29, governance script 38/38 (with toolchain). PR body must use PULL_REQUEST_TEMPLATE/agent-contribution.md verbatim; document removal of C++ content and docs/ changes in PR scope.",
+    "files_modified": [
+      "Cargo.toml, Cargo.lock (new)", "src/lib.rs, types.rs, dto.rs, promptdefense.rs, sleepwalker.rs, rrt.rs, foundation.rs, tests.rs (new)",
+      "README.md (rewritten for Rust)",
+      "packages/ (removed)", "CMakeLists.txt (removed)", "vcpkg.json (removed)", "asfdk-architecture.png (removed)",
+      "docs/PLAN.md, docs/DECISIONS.md, docs/HANDOFF-*.md, docs/ASFDK-C++-HANDOFF.md, docs/phase-1-reference-analysis.md, docs/ref_PORT_MATRIX_TOI.md, docs/reviews/ (removed)",
+      "docs/active-threads.md (rewritten for Rust port)", "docs/agent-log/ (fresh Rust records)",
+      "AGENTS.md, CLAUDE.md, nltotoi.json, .nltotoi/*, .github/workflows/validate-governance.yml, .gitignore (updated)"
+    ],
+    "tests_run": [
+      "cargo test --locked (29 tests)",
+      "cargo clippy --all-targets -- -D warnings",
+      "cargo fmt --check",
+      "cargo build --locked",
+      "bash .nltotoi/scripts/validate-governance.sh"
+    ],
+    "tests_passing": true
+  }
+}

@@ -1,0 +1,16 @@
+[package]
+name = "asfdk"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+description = "ASFDK Solidarity Framework port to Rust: TOI/OTOI governance, prompt defense, Sleepwalker emotional analysis, RRT crisis assessment"
+license = "Unlicense"
+repository = "https://github.com/NeuroLift-Technologies/asfdk-rust"
+keywords = ["ai-safety", "governance", "crisis", "moderation"]
+categories = ["text-processing"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[dev-dependencies]

@@ -1,6 +1,7 @@
-name: ASFDK C++ Governance Validation
+name: ASFDK Rust Governance Validation
 on:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/validate-governance.yml'
       - '.nltotoi/**'
@@ -11,6 +12,8 @@ on:
       - 'SOPs/**'
       - 'ISSUE_TEMPLATE/**'
       - 'PULL_REQUEST_TEMPLATE/**'
+      - 'src/**'
+      - 'Cargo.toml'
   pull_request:
     paths:
       - '.github/workflows/validate-governance.yml'
@@ -22,6 +25,8 @@ on:
       - 'SOPs/**'
       - 'ISSUE_TEMPLATE/**'
       - 'PULL_REQUEST_TEMPLATE/**'
+      - 'src/**'
+      - 'Cargo.toml'
 
 jobs:
   validate:
@@ -29,6 +34,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
       - name: Check governance status
-        run: |
-          bash .nltotoi/scripts/validate-governance.sh
+        run: bash .nltotoi/scripts/validate-governance.sh
+      - name: Format check
+        run: cargo fmt --check
+      - name: Build
+        run: cargo build --locked
+      - name: Clippy
+        run: cargo clippy --all-targets -- -D warnings
+      - name: Test
+        run: cargo test --locked

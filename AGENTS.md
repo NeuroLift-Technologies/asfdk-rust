@@ -1,14 +1,13 @@
-# AGENTS.md — Cplus
+# AGENTS.md — Rust
 
 ## Agent Registry
-This file tracks all AI agents authorized to operate within the `Cplus` repository. In accordance with the Solidarity Framework and OTOI ORG-DEV-OTOI-1.0.3, all agent activity must be registered and traceable.
+This file tracks all AI agents authorized to operate within the `Rust` repository. In accordance with the Solidarity Framework and OTOI ORG-DEV-OTOI-1.0.3, all agent activity must be registered and traceable.
 
 ### Registered Agents
 
 | Agent ID | Role | Authority Level | Responsibility | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| `cplus_governance_agent` | C++ Governance & Integration | Advisory (architecture decisions escalated) | C++ ASFDK port, NLTGovernanceSubsystem C++ integration, TOI/OTOI compliance | **Active** |
-| `cplus_unreal_bridge` | Unreal Engine Bridge | Advisory (UE C++ integration) | UnrealEngine NLTGovernanceSubsystem port, Mass Entity bridge, Fusion ↔ Unreal sync | **Active** |
+| `rust_governance_agent` | Rust Governance & Integration | Advisory (architecture decisions escalated) | ASFDK Rust port, TOI/OTOI compliance, crate maintenance | **Active** |
 
 ---
 
@@ -24,7 +23,7 @@ Agents must use the mandatory commit format defined in `CLAUDE.md`:
 ### 3. Escalation Trigger
 Agents must escalate immediately to the Human Principal if:
 - Mission drift is detected.
-- Conflict arises between the ASFDK canonical source and the C++ implementation.
+- Conflict arises between the ASFDK canonical source and the Rust implementation.
 - Ambiguity exists regarding architectural decisions or governance boundaries.
 
 ---
